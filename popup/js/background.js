@@ -486,10 +486,11 @@ function insertEmoti() {
 }
 
 function copyEmoti() {
-    // var parsedText = document.getElementById("hiddenEmotiSelectBox").value = unescapeHTML(this.innerHTML);
+    var parsedText = document.getElementById("hiddenEmotiSelectBox").value = unescapeHTML(this.innerHTML);
     var copiedText = document.getElementById("hiddenEmotiSelectBox");
     copiedText.select();
     document.execCommand('Copy');
+    displayStatusMessage(copiedText.value + " copied to clipboard.", "emotiStatusMessage");
 }
 
 ////
