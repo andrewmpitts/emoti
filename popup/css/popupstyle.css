@@ -2,9 +2,6 @@
 body {
     background-color: #fffafa;
     width: 225px;
-    /*overflow-y: scroll;*/
-    /*height: 700px;*/
-    /*overflow: scroll;*/
     font-family: Arial;
 }
 
@@ -15,13 +12,11 @@ body {
     height: auto;
     max-height: 600px;
     display: block;
-    /*overflow: scroll;*/
 }
 
 .emotiCategoryContainerTitle {
     position: relative;
     width: 100%;
-    /*background-color: #dcd8db;*/
     color: #3a3a3a;
     font-family: helvetica;
     font-size: .9rem;
@@ -31,28 +26,17 @@ body {
     padding-bottom: 5px;
     left: -25px;
     margin-bottom: 10px;
-    /*float: left;*/
     display: inline-block;
 }
-
-/*.emoti_container {*/
-    /*position: relative;*/
-    /*width: 225px;*/
-    /*margin-left: 25px;*/
-    /*background-color: #ffffff;*/
-    /*margin-top: 5px;*/
-    /*font-size: 0.8em;*/
-/*}*/
 
 .emoti {
     font-size: 1.1em;
     margin-left: 10px;
-    /*border: 1px black dotted;*/
     padding: 5px;
     margin-top: 5px;
     display: inline-block;
     font-family: Arial;
-
+    cursor: pointer;
 }
 
 .emoti:hover {
@@ -63,20 +47,16 @@ body {
     position: relative;
     width: 20px;
     height: 20px;
-    /*background-color: #753aaf;*/
     color: white;
     stroke: white;
     font-family: helvetica;
     font-size: 1.6em;
     text-align: center;
-    /*padding-top: 10px;*/
-    /*padding-bottom: 10px;*/
     margin-left: 5px;
     margin-right: 5px;
-    /*left: -25px;*/
-    /*margin-bottom: 10px;*/
     float: right;
     border-radius: 50%;
+    cursor: pointer;
 }
 
 .actionBarButton:hover {
@@ -90,7 +70,6 @@ body {
 .form {
     display: none;
     margin-bottom: 25px;
-    /*height: 100px;*/
 }
 
 .addEmotiTextInput {
@@ -107,7 +86,6 @@ body {
     margin-bottom: 5px;
     width: 204px;
     font-size: 1.25em;
-    /*font-size: 1.25em;*/
 }
 
 .addEmotiButton {
@@ -122,8 +100,6 @@ body {
     width: 100%;
     height: auto;
     float: right;
-    /*text-align: center;*/
-    /*width: 100%;*/
 }
 
 #addEmotiCategoryText {
@@ -146,7 +122,6 @@ body {
 
 .deleteCategoryIcon {
     position: relative;
-    /*left: -50px;*/
     float: right;
     display: inline-block;
     z-index: 2;
@@ -154,9 +129,8 @@ body {
     height: 1.2em;
     margin-left: 2px;
     visibility: hidden;
+    cursor: pointer;
 }
-
-/*.deleteCategoryIcon:hover {}*/
 
 .deleteCategoryIcon:hover {
     background-color: #b23b2f;
@@ -171,6 +145,7 @@ body {
     height: 1em;
     visibility: hidden;
     display: inline-block;
+    cursor: pointer;
 }
 
 .deleteEmotiIcon:hover {
@@ -180,14 +155,10 @@ body {
 #emotiStatusMessage {
     width: 100%;
     height: 20px;
-    /* height: 25px; */
-    /*padding: 10px;*/
     margin: auto;
-    /* background-color: #B9FF9F; */
     position: relative;
     font-size: 1.2em;
     color: #27bb6c;
-    /* top: 15px; */
     text-align: center;
     visibility: hidden;
     display: inline-block;
@@ -198,14 +169,9 @@ body {
 
 #popupTitle {
     height: 15px;
-    /*left: -65px;*/
-    /* top: 2px; */
     position: relative;
     font-size: 1.4em;
-    /* width: 190px; */
     text-align: left;
-    /* margin: 5px; */
-    /* margin-bottom: 10px; */
     display: inline-block;
     float: left;
 }
@@ -214,7 +180,6 @@ body {
     position: relative;
     display: block;
     width: 100%;
-    /*overflow: scroll;*/
 }
 
 .borderHR {
@@ -238,7 +203,6 @@ body {
 
 .hiddenTextInput {
     position: fixed;
-    /*visibility: hidden;*/
     top: -100px;
 }
 
@@ -247,8 +211,6 @@ body {
     position: relative;
     top: -10px;
     font-size: .3em;
-    /*width: 5px;*/
-    /*height: 5px;*/
     display: none;
     background-color: #9a9a9a;
 }

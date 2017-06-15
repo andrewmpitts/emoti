@@ -29,7 +29,7 @@ function Emoti(emoti, category) {
 ////
 function populateSettings() {
     chrome.storage.sync.get("settings", function(obj) {
-        if (obj.settings['insert'] == "true") {
+        if (obj.settings['insert'] == 'true') {
             document.getElementById("emotiClickSettingsSelect").value = "true";
         }
         else {
@@ -48,6 +48,7 @@ function saveSettings() {
         displayStatusMessage("Settings saved.", "emotiStatusMessage");
         hideSettingsMenu();
         populateCategories();
+        document.getElementById("emotiClickSettingsSelect").value = insertOnClick;
         });
 }
 
@@ -60,7 +61,6 @@ function initBaseVariables() {
         }
         else {
             chrome.storage.sync.set({"categories" : []}, function() {
-                console.log("categories not found");
                 populateCategories();
                 addStaticUIEventListeners();
             })
@@ -76,7 +76,6 @@ function initBaseVariables() {
             chrome.storage.sync.set({"settings": {
                 "insert": true}
             }, function() {
-                console.log("settings not found");
             })
         }
 
@@ -268,7 +267,7 @@ function deleteEmoti() {
 function populateEmotisByCategory(categoryString) {
     var insertOnClick = false;
     chrome.storage.sync.get("settings", function(settingsObj) {
-        if (settingsObj.settings.insert) {
+        if (settingsObj.settings.insert == 'true') {
             insertOnClick = true;
         }
         chrome.storage.sync.get(categoryString, function(items){
