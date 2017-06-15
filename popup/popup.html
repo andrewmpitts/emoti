@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Emoti</title>
+    <link rel="stylesheet" type="text/css" href="css/popupstyle.css"/>
+</head>
+<body>
+
+<input type = "text" id = "hiddenEmotiSelectBox" class = "hiddenTextInput" name = "hiddenEmotiSelectBox">
+<input type = "text" id = "hiddenCopyBox" class = "hiddenTextInput" name = "hiddenCopyBox">
+    <div id = "emotiActionBar">
+        <span id = "popupTitle">Emoti</span>
+        <img id = "settingsEmotiButton" class = "actionBarButton" src = "/img/settings.svg">
+        <img id = "editEmotiButton" class = "actionBarButton" src = "/img/trash2.svg">
+        <img id ="addEmotiButton" class = "actionBarButton" src = "/img/add.svg">
+        <br>
+
+    </div>
+    <hr class = "actionBarHR">
+    <span id = "emotiStatusMessage" class = "message"></span>
+
+    <form id = "emotiAddForm" class = "form" autocomplete = "off"> <input type="text" id = "addEmotiText" class = "addEmotiTextInput" name="emotiText" placeholder="Emoticon">
+        <br>
+        <select name="categorySelect" id = "addEmotiCategory"></select>
+        <input type="text" id = "addEmotiCategoryText" class = "addEmotiTextInput" name="emotiNewCategory" placeholder="Category Name">
+        <br>
+        <span id = "addEmotiErrorMessage" class = "message"></span>
+        <button id = "submitAddEmotiButton"  class = "addEmotiButton" type = "button">Submit</button>
+        <button id = "cancelAddEmotiButton" class = "addEmotiButton" type = "button">Cancel</button>
+        <hr class = "formHR">
+    </form>
+
+    <form id = "settingsForm" class = "form" autocomplete = "off">
+        <span class = "settingsText">Click: </span><select name="categorySelect" id = "emotiClickSettingsSelect"><option value = "true">Insert</option><option value = "false">Copy to Clipboard</option></select>
+        <br>
+        <br>
+        <span id = "settingsStatusMessage" class = "message"></span>
+        <button id = "saveSettingsButton" type = "button">Save</button>
+        <button id = "discardSettingsButton" type = "button">Cancel</button>
+        <hr class = "formHR">
+    </form>
+
+    <div id = "initBaseEmotiDiv"><span>Add some basic emotis to get started?</span><button id = "initBaseEmotiButton">Yes</button><button id = "cancelInitBaseEmotiButton">No</button></div>
+
+    <div id = "emotiCategoryContainer" class = "emoti_category_button_container">
+</div>
+</body>
+<script src="js/background.js"></script>
+<!--Settings icon by Webalys http://www.webalys.com/-->
+<!--Trash icon by Alexander Madyankin-->
+<!--Add icon by W3 Creative Lab-->
+<!--X icon by Denis Mikhutin-->
+</html>

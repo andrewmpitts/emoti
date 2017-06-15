@@ -1,0 +1,271 @@
+
+body {
+    background-color: #fffafa;
+    width: 225px;
+    /*overflow-y: scroll;*/
+    /*height: 700px;*/
+    /*overflow: scroll;*/
+    font-family: Arial;
+}
+
+#emotiCategoryContainer {
+    position: relative;
+    left: 0px;
+    width: 100%;
+    height: auto;
+    max-height: 600px;
+    display: block;
+    /*overflow: scroll;*/
+}
+
+.emotiCategoryContainerTitle {
+    position: relative;
+    width: 100%;
+    /*background-color: #dcd8db;*/
+    color: #3a3a3a;
+    font-family: helvetica;
+    font-size: .9rem;
+    text-align: left;
+    padding-left: 25px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    left: -25px;
+    margin-bottom: 10px;
+    /*float: left;*/
+    display: inline-block;
+}
+
+/*.emoti_container {*/
+    /*position: relative;*/
+    /*width: 225px;*/
+    /*margin-left: 25px;*/
+    /*background-color: #ffffff;*/
+    /*margin-top: 5px;*/
+    /*font-size: 0.8em;*/
+/*}*/
+
+.emoti {
+    font-size: 1.1em;
+    margin-left: 10px;
+    /*border: 1px black dotted;*/
+    padding: 5px;
+    margin-top: 5px;
+    display: inline-block;
+    font-family: Arial;
+
+}
+
+.emoti:hover {
+    background-color: #B9FF9F;
+}
+
+.actionBarButton {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    /*background-color: #753aaf;*/
+    color: white;
+    stroke: white;
+    font-family: helvetica;
+    font-size: 1.6em;
+    text-align: center;
+    /*padding-top: 10px;*/
+    /*padding-bottom: 10px;*/
+    margin-left: 5px;
+    margin-right: 5px;
+    /*left: -25px;*/
+    /*margin-bottom: 10px;*/
+    float: right;
+    border-radius: 50%;
+}
+
+.actionBarButton:hover {
+    fill: #faf8ff;
+    background-color: #B9FF9F;
+
+}
+
+/*Add form and children*/
+
+.form {
+    display: none;
+    margin-bottom: 25px;
+    /*height: 100px;*/
+}
+
+.addEmotiTextInput {
+    margin: auto;
+    position: relative;
+    margin-bottom: 5px;
+    width: 200px;
+    font-size: 1.25em;
+}
+
+#addEmotiCategory {
+    margin: auto;
+    position: relative;
+    margin-bottom: 5px;
+    width: 204px;
+    font-size: 1.25em;
+    /*font-size: 1.25em;*/
+}
+
+.addEmotiButton {
+    position: relative;
+    float: left;
+    margin-right: 5px;
+}
+
+#emotiActionBar {
+    position: relative;
+    margin: auto;
+    width: 100%;
+    height: auto;
+    float: right;
+    /*text-align: center;*/
+    /*width: 100%;*/
+}
+
+#addEmotiCategoryText {
+    display: none;
+}
+
+.message {
+    font-family: "Times New Roman";
+    color: darkred;
+}
+
+#addEmotiErrorMessage {
+    display: none;
+}
+
+.categoryDeleteWarning {
+    font-size: .9em;
+    display: none;
+}
+
+.deleteCategoryIcon {
+    position: relative;
+    /*left: -50px;*/
+    float: right;
+    display: inline-block;
+    z-index: 2;
+    width: 1.2em;
+    height: 1.2em;
+    margin-left: 2px;
+    visibility: hidden;
+}
+
+/*.deleteCategoryIcon:hover {}*/
+
+.deleteCategoryIcon:hover {
+    background-color: #b23b2f;
+}
+
+.deleteEmotiIcon {
+    position: relative;
+    top: 2px;
+    left: -3px;
+    z-index: 2;
+    width: 1em;
+    height: 1em;
+    visibility: hidden;
+    display: inline-block;
+}
+
+.deleteEmotiIcon:hover {
+    background-color: #b23b2f;
+}
+
+#emotiStatusMessage {
+    width: 100%;
+    height: 20px;
+    /* height: 25px; */
+    /*padding: 10px;*/
+    margin: auto;
+    /* background-color: #B9FF9F; */
+    position: relative;
+    font-size: 1.2em;
+    color: #27bb6c;
+    /* top: 15px; */
+    text-align: center;
+    visibility: hidden;
+    display: inline-block;
+    overflow: hidden;
+    font-family: Arial;
+
+}
+
+#popupTitle {
+    height: 15px;
+    /*left: -65px;*/
+    /* top: 2px; */
+    position: relative;
+    font-size: 1.4em;
+    /* width: 190px; */
+    text-align: left;
+    /* margin: 5px; */
+    /* margin-bottom: 10px; */
+    display: inline-block;
+    float: left;
+}
+
+.emotiContainer {
+    position: relative;
+    display: block;
+    width: 100%;
+    /*overflow: scroll;*/
+}
+
+.borderHR {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.formHR {
+    position: relative;
+    top: 15px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.actionBarHR {
+    width: 100%;
+    top: 6px;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.hiddenTextInput {
+    position: fixed;
+    /*visibility: hidden;*/
+    top: -100px;
+}
+
+.deleteEmotiButton {
+    border: none;
+    position: relative;
+    top: -10px;
+    font-size: .3em;
+    /*width: 5px;*/
+    /*height: 5px;*/
+    display: none;
+    background-color: #9a9a9a;
+}
+
+.deleteEmotiButton:hover {
+    background-color: #4c4c4c;
+}
+
+#settingsForm {
+    display: none;
+}
+
+.emotiHolder {
+    display: inline-block;
+}
+
+#initBaseEmotiDiv {
+    display: none;
+    text-align: center;
+}
