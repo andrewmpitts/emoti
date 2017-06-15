@@ -480,7 +480,7 @@ function insertEmoti() {
         chrome.tabs.sendMessage(tabs[0].id, {emoti: parsedText}, function() {
             previousCopiedTextInput.select();
             document.execCommand('Copy');
-
+            displayStatusMessage(copiedText.value + " inserted.", "emotiStatusMessage");
         });
     });
 }

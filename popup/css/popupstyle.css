@@ -154,7 +154,7 @@ body {
 
 #emotiStatusMessage {
     width: 100%;
-    height: 20px;
+    height: auto;
     margin: auto;
     position: relative;
     font-size: 1.2em;
