@@ -2,9 +2,6 @@
  * Created by andrew on 12/4/2016.
  */
 
-// TODO:
-//      Add collapsing emoti containers
-
 // Base variables
 
 // Emoti categories
@@ -24,13 +21,6 @@ var emotiLengthCeiling = 32;
 function Emoti(emoti, category) {
     this.emoti = emoti;
     this.category = category;
-}
-
-// Model of Copypasta object.
-// Used for longer strings that users may wish to use on forums.
-function Copypasta(copypasta) {
-    this.name = name;
-    this.copypasta = copypasta;
 }
 
 //////
@@ -55,7 +45,6 @@ function saveSettings() {
         }
     };
     chrome.storage.sync.set(settingsObject, function(){
-        console.log("Settings saved.");
         displayStatusMessage("Settings saved.", "emotiStatusMessage");
         hideSettingsMenu();
         populateCategories();
@@ -63,27 +52,39 @@ function saveSettings() {
 }
 
 
-function initBaseSettings() {
-    chrome.storage.sync.get("settings", function(settings) {
-        if ('settings' in settings) {
-            console.log("Existing settings found.");
+function initBaseVariables() {
+    chrome.storage.sync.get("categories", function(categories) {
+        if ('categories' in categories) {
+            populateCategories();
+            addStaticUIEventListeners();
         }
         else {
-            console.log("Settings not found. Creating base settings.");
+            chrome.storage.sync.set({"categories" : []}, function() {
+                console.log("categories not found");
+                populateCategories();
+                addStaticUIEventListeners();
+            })
+        }
+
+    });
+
+    chrome.storage.sync.get("settings", function(settings) {
+        if ('settings' in settings) {
+
+        }
+        else {
             chrome.storage.sync.set({"settings": {
                 "insert": true}
             }, function() {
-                console.log("Initial settings saved.");
+                console.log("settings not found");
             })
         }
+
     })
+
+
 }
 
-function deleteSettings() {
-    chrome.storage.local.remove("settings", function() {
-        console.log("Settings deleted.");
-    })
-}
 //////
 
 // Emoti functions
@@ -101,9 +102,7 @@ function initBaseEmoti() {
         "confused",
         "tables",
         "misc"
-    ]}, function() {
-        console.log("Categories set");
-    });
+    ]}, function() {});
 
     chrome.storage.sync.set({"happy": [
         new Emoti("=)", "happy"),
@@ -114,9 +113,7 @@ function initBaseEmoti() {
         new Emoti("( ‘-’)人(ﾟ_ﾟ ) ", "happy"),
         new Emoti("(＾ｖ＾)", "happy"),
         new Emoti("(#^.^#)", "happy")
-    ]}, function() {
-        console.log("Happy set");
-    });
+    ]}, function() {});
 
     chrome.storage.sync.set({"sad": [
         new Emoti("=(", "sad"),
@@ -127,9 +124,7 @@ function initBaseEmoti() {
         new Emoti("ಠ╭╮ಠ", "sad"),
         new Emoti("(◕︿◕✿)", "sad"),
         new Emoti("ʕ ಡ ﹏ ಡ ʔ", "sad")
-    ]}, function() {
-        console.log("Sad set");
-    });
+    ]}, function() {});
 
     chrome.storage.sync.set({"angry": [
         new Emoti(">.<", "angry"),
@@ -139,27 +134,21 @@ function initBaseEmoti() {
         new Emoti("＼(｀0´)／", "angry"),
         new Emoti("(ノಠ益ಠ)ノ", "angry"),
         new Emoti("ヽ(｀⌒´メ)ノ", "angry")
-    ]}, function() {
-        console.log("Angry set");
-    });
+    ]}, function() {});
 
     chrome.storage.sync.set({"confused": [
         new Emoti("¯\\_(ツ)_/¯", "confused"),
         new Emoti("¯\\\\_(ツ)_/¯", "confused"),
         new Emoti("(・・。)ゞ", "confused"),
         new Emoti("(-_-)ゞ゛", "confused")
-    ]}, function() {
-        console.log("Confused set");
-    });
+    ]}, function() {});
 
     chrome.storage.sync.set({"tables": [
         new Emoti("(╯°□°）╯︵ ┻━┻", "tables"),
         new Emoti("┬─┬ ノ( ^_^ノ)", "tables"),
         new Emoti("┻━┻ ︵ヽ(`□´)ﾉ︵﻿ ┻━┻", "tables"),
         new Emoti(" (ノಠ益ಠ)ノ彡┻━┻", "tables")
-    ]}, function() {
-        console.log("Tables set");
-    });
+    ]}, function() {});
 
 
 
@@ -167,9 +156,7 @@ function initBaseEmoti() {
         new Emoti(".....φ(・∀・＊)", "misc"),
         new Emoti("♪┏(・o･)┛♪┗ ( ･o･) ┓", "misc"),
         new Emoti("(☞ﾟヮﾟ)☞", "misc")
-    ]}, function() {
-        console.log("Tables set");
-    });
+    ]}, function() {});
 
     populateCategories();
 }
@@ -189,16 +176,14 @@ function saveNewEmoti() {
 
     var emotiText = document.getElementById("addEmotiText").value;
     var emotiCategory = document.getElementById("addEmotiCategory").value;
-    var emotiCategoryText = document.getElementById("addEmotiCategoryText").value
+    var emotiCategoryText = document.getElementById("addEmotiCategoryText").value;
     var newCategory = false;
     if (emotiCategory == "noCategory") {
-        console.log("A category must be selected");
         displayAddErrorMessage("A category must be selected");
         return false;
     }
     else if (emotiCategory == "newCategory") {
         if (document.getElementById("addEmotiCategoryText").value == "") {
-            console.log("A new category must be created");
             displayAddErrorMessage("A new category must be created");
             return false;
         }
@@ -211,8 +196,6 @@ function saveNewEmoti() {
             newCategory = true;
         }
         else {
-            console.log("Category string is too long.");
-            // displayAddErrorMessage("Your category is too long. (Max " + categoryLengthCeiling + " characters)");
             return false;
         }
 
@@ -230,12 +213,10 @@ function saveNewEmoti() {
             var newCategories = items.categories;
             newCategories.push(newCategoryText);
             chrome.storage.sync.set({"categories": newCategories}, function() {
-                console.log("Saved category: " + newCategoryText);
                 var newEmotiObject = {};
                 emoti.category = newCategoryText;
                 newEmotiObject[newCategoryText] = [emoti];
                 chrome.storage.sync.set(newEmotiObject, function() {
-                    console.log("Saved emoti: " + emoti.emoti);
                     displayStatusMessage("Saved emoti: " + emoti.emoti, "emotiStatusMessage");
                     hideAddEmotiForm();
                     populateCategories();
@@ -252,7 +233,6 @@ function saveNewEmoti() {
                     items[emotiCategory].push(emoti);
                     newEmotisObject[emotiCategory] = items[emotiCategory];
                     chrome.storage.sync.set(newEmotisObject, function() {
-                        console.log("Saved emoti: " + emoti.emoti);
                         hideAddEmotiForm();
                         displayStatusMessage("Saved emoti: " + emoti.emoti, "emotiStatusMessage");
                         populateCategories();
@@ -278,9 +258,7 @@ function deleteEmoti() {
         var newObj = {};
         newObj[category] = newEmotis;
         chrome.storage.sync.set(newObj, function () {
-            console.log("Removed emoti: " + emoti);
             document.getElementById('h' + category + emoti).remove();
-            // document.getElementById('x' + category + emoti).remove();
             displayStatusMessage(emoti + " removed", "emotiStatusMessage");
         });
     });
@@ -288,18 +266,15 @@ function deleteEmoti() {
 }
 
 function populateEmotisByCategory(categoryString) {
-    var insertOnClick = true;
+    var insertOnClick = false;
     chrome.storage.sync.get("settings", function(settingsObj) {
-        if (settingsObj.settings.insert == "true") {
+        if (settingsObj.settings.insert) {
             insertOnClick = true;
-        }
-        else {
-            insertOnClick = false;
         }
         chrome.storage.sync.get(categoryString, function(items){
             items[categoryString].forEach(function(item, i){
                 document.getElementById("cont" + categoryString).innerHTML +=
-                    "<span id = 'h" + item.category + item.emoti + "' class = 'emotiHolder'><span id = 'i" + item.category + item.emoti + "' class = 'emoti' value = '" + item.emoti + "'>" + item.emoti + "</span><img id = 'x" + item.category + item.emoti + "' class = 'deleteEmotiIcon' name = '" + item.emoti + "' alt = '" + categoryString + "' src = '/img/x.svg'><span>";
+                    "<span id = 'h" + item.category + item.emoti + "' class = 'emotiHolder'><span id = 'i" + item.category + item.emoti + "' class = 'emoti'>" + item.emoti + "</span><img id = 'x" + item.category + item.emoti + "' class = 'deleteEmotiIcon' name = '" + item.emoti + "' alt = '" + categoryString + "' src = '/img/x.svg'><span>";
             });
 
             var emotiElements = document.querySelectorAll('.emoti');
@@ -310,8 +285,8 @@ function populateEmotisByCategory(categoryString) {
             }
 
             var deleteEmotiIcons = document.querySelectorAll('.deleteEmotiIcon');
-            for (var i = 0; i < deleteEmotiIcons.length; i++) {
-                deleteEmotiIcons[i].addEventListener('click', deleteEmoti);
+            for (var n = 0; n < deleteEmotiIcons.length; n++) {
+                deleteEmotiIcons[n].addEventListener('click', deleteEmoti);
                 // emotiElements[i].addEventListener('contextmenu', displayEmotiContextMenu, false);
             }
 
@@ -322,26 +297,22 @@ function populateEmotisByCategory(categoryString) {
 function populateAddEmotiCategories() {
     var addEmotiCategorySelector = document.getElementById("addEmotiCategory");
     addEmotiCategorySelector.innerHTML = "";
-    addEmotiCategorySelector.innerHTML += "<option value='noCategory'>-- Choose a Category --</option>"
+    addEmotiCategorySelector.innerHTML += "<option value='noCategory'>-- Choose a Category --</option>";
     if (categories.length > 0) {
         for (var i = 0; i < categories.length; i++) {
             addEmotiCategorySelector.innerHTML += "<option value='" + categories[i] + "'>" + categories[i] + "</option>"
         }
     }
-    addEmotiCategorySelector.innerHTML += "<option value='newCategory'>---New Category---</option>"
+    addEmotiCategorySelector.innerHTML += "<option value='newCategory'>---New Category---</option>";
     document.getElementById("addEmotiCategory").addEventListener('change', selectAddEmotiCategory);
-    // onchange="report(this.value)"
 }
 
 // Displays a new category input text box when "new category" is selected on the add category menu
 function selectAddEmotiCategory() {
-    console.log("Category selector changed.")
     if (document.getElementById("addEmotiCategory").value == "newCategory") {
         document.getElementById("addEmotiCategoryText").style.display = "block";
-        // Display new category form
     }
     else if (document.getElementById("addEmotiCategory").value == "noCategory") {
-        // Inform user that they must select a category upon form submission.
         document.getElementById("addEmotiCategoryText").style.display = "none";
     }
     else {
@@ -368,12 +339,10 @@ function deleteCategory() {
         // Remove from Categories
         categories = removeFromArray(category, categories);
 
-        chrome.storage.sync.get("categories", function (items) {
+        chrome.storage.sync.get("categories", function () {
             chrome.storage.sync.set({"categories": categories}, function () {
-                console.log("Removed category: " + category);
             });
             chrome.storage.sync.remove("category", function () {
-                console.log("Removed category: " + category);
                 document.getElementById('cont' + category).remove();
                 document.getElementById('cat' + category).remove();
                 document.getElementById('hr' + category).remove();
@@ -401,7 +370,7 @@ function populateCategories() {
         else {
             hideBaseEmotiDiv();
         }
-        items.categories.forEach(function(item, i){
+        items.categories.forEach(function(item){
             document.getElementById("emotiCategoryContainer").innerHTML +=
                 "<span id = 'cat" + item + "' class = 'emotiCategoryContainerTitle'>" + item + "<img id = '" + item + "' src = '/img/x.svg' class = 'deleteCategoryIcon'></span><br>" +
                 "<span id = warning-" + item + " class = 'categoryDeleteWarning'>Deleting this category will remove all contained emotis. Continue?</span>" +
@@ -450,12 +419,10 @@ function unescapeHTML(escapedHTML) {
 // Return false if category is above N length to ensure the window doesn't look like crap.
 function checkCategoryLength(categoryString) {
     if (categoryString.length > categoryLengthCeiling) {
-        console.log("Category name is above " + categoryLengthCeiling + " characters. Try again with a shorter category name.");
         displayAddErrorMessage("Category name is above " + categoryLengthCeiling + " characters. Try again with a shorter category name.");
         return false;
     }
     else if (categoryString.length <= 0) {
-        console.log("Category field cannot be empty");
         displayAddErrorMessage("Category field cannot be empty");
         return false;
     }
@@ -465,13 +432,11 @@ function checkCategoryLength(categoryString) {
 // Return false if emoti is above N length.
 function checkEmotiLength(emotiString) {
     if (emotiString.length > emotiLengthCeiling) {
-        console.log("Emoti is above " + emotiLengthCeiling + " characters. Try again with a shorter emoti.");
         displayAddErrorMessage("Emoti is above " + emotiLengthCeiling + " characters. Try again with a shorter emoti.");
         return false;
     }
     else if (emotiString.length <= 0) {
         displayAddErrorMessage("Emoti field cannot be empty");
-        console.log("Emoti field cannot be empty");
         return false;
     }
     return true;
@@ -513,8 +478,7 @@ function insertEmoti() {
     copiedText.select();
     document.execCommand('Copy');
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, {emoti: parsedText}, function(response) {
-            console.log("Emoti copied.");
+        chrome.tabs.sendMessage(tabs[0].id, {emoti: parsedText}, function() {
             previousCopiedTextInput.select();
             document.execCommand('Copy');
 
@@ -523,7 +487,7 @@ function insertEmoti() {
 }
 
 function copyEmoti() {
-    var parsedText = document.getElementById("hiddenEmotiSelectBox").value = unescapeHTML(this.innerHTML);
+    // var parsedText = document.getElementById("hiddenEmotiSelectBox").value = unescapeHTML(this.innerHTML);
     var copiedText = document.getElementById("hiddenEmotiSelectBox");
     copiedText.select();
     document.execCommand('Copy');
@@ -574,10 +538,8 @@ function startEditMode() {
         deleteCategoryIcons[i].style.visibility = "visible";
     }
     var deleteEmotiIcons = document.querySelectorAll('.deleteEmotiIcon');
-    for (var i = 0; i < deleteEmotiIcons.length; i++) {
-        deleteEmotiIcons[i].style.visibility = "visible";
-        // deleteCategoryIcons[i].addEventListener('click', deleteCategory, false);
-        // emotiElements[i].addEventListener('contextmenu', displayEmotiContextMenu, false);
+    for (var n = 0; n < deleteEmotiIcons.length; n++) {
+        deleteEmotiIcons[n].style.visibility = "visible";
     }
     editEmotiIcon.style.backgroundColor = "#B9FF9F";
     editEmotiIcon.removeEventListener('click', startEditMode, false);
@@ -591,14 +553,10 @@ function endEditMode() {
     var deleteCategoryIcons = document.querySelectorAll('.deleteCategoryIcon');
     for (var i = 0; i < deleteCategoryIcons.length; i++) {
         deleteCategoryIcons[i].style.visibility = "hidden";
-        // deleteCategoryIcons[i].addEventListener('click', deleteCategory, false);
-        // emotiElements[i].addEventListener('contextmenu', displayEmotiContextMenu, false);
     }
     var deleteEmotiIcons = document.querySelectorAll('.deleteEmotiIcon');
-    for (var i = 0; i < deleteEmotiIcons.length; i++) {
-        deleteEmotiIcons[i].style.visibility = "hidden";
-        // deleteCategoryIcons[i].addEventListener('click', deleteCategory, false);
-        // emotiElements[i].addEventListener('contextmenu', displayEmotiContextMenu, false);
+    for (var n = 0; n < deleteEmotiIcons.length; n++) {
+        deleteEmotiIcons[n].style.visibility = "hidden";
     }
     editEmotiIcon.style.backgroundColor = "";
     editEmotiIcon.removeEventListener('click', endEditMode, false);
@@ -619,9 +577,6 @@ function displaySettingsMenu() {
     hideAddEmotiForm();
     endEditMode();
     populateSettings();
-    // populateAddEmotiCategories();
-    // document.getElementById("addEmotiButton").onclick = "hideAddEmotiForm()";
-    // document.getElementById("addEmotiButton").addEventListener("click", hideAddEmotiForm);
     document.getElementById("settingsForm").style.display = "block";
     settingsIcon.style.backgroundColor = "#B9FF9F";
     settingsIcon.removeEventListener('click', displaySettingsMenu, false);
@@ -660,9 +615,8 @@ function addStaticUIEventListeners() {
 ////Initialization functions
 // Initializes the program when popup.html is opened.
 function init() {
-    initBaseSettings();
-    populateCategories();
-    addStaticUIEventListeners();
+    initBaseVariables();
+
 }
 
 // Begins the program
