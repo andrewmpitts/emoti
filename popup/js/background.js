@@ -89,21 +89,56 @@ function initBaseVariables() {
 // Emoti functions
 ////
 
+function initEmoti(category, emotiArray) {
+    chrome.storage.sync.get(category, function(obj) {
+        var oldEmotis = obj[category];
+        if (oldEmotis != undefined) {
+            emotiArray.forEach(function(item) {
+                if (emotiIsUnique(item, oldEmotis)) {
+                    oldEmotis.push(item);
+                }
+            });
+            chrome.storage.sync.set({category: oldEmotis}, function() {
+            });
+        }
+        else {
+            var newObj = {};
+            newObj[category] = emotiArray;
+            chrome.storage.sync.set(newObj, function() {
+            });
+        }
+    });
+}
+
 // Creates a list of base emotis.
 // This is only run on first installation or when Emoti is reset to base settings.
 function initBaseEmoti() {
 
-    // chrome.storage.sync.set({"categories": {}}, function(){});
-    chrome.storage.sync.set({"categories": [
-        "happy",
-        "sad",
-        "angry",
-        "confused",
-        "tables",
-        "misc"
-    ]}, function() {});
+    chrome.storage.sync.get("categories", function(obj) {
+        var newCategories = [
+            "happy",
+            "sad",
+            "angry",
+            "confused",
+            "tables",
+            "misc"
+        ];
+        var oldCategories = obj.categories;
 
-    chrome.storage.sync.set({"happy": [
+
+        newCategories.forEach(function(item) {
+            if (oldCategories.indexOf(item) == -1) {
+                oldCategories.push(item);
+            }
+        });
+        chrome.storage.sync.set({"categories": oldCategories}, function(){
+
+        });
+    });
+
+    var oldEmotis = [];
+
+    var happyEmotis = [
         new Emoti("=)", "happy"),
         new Emoti(":‑)", "happy"),
         new Emoti(":D", "happy"),
@@ -112,9 +147,9 @@ function initBaseEmoti() {
         new Emoti("( ‘-’)人(ﾟ_ﾟ ) ", "happy"),
         new Emoti("(＾ｖ＾)", "happy"),
         new Emoti("(#^.^#)", "happy")
-    ]}, function() {});
+    ];
 
-    chrome.storage.sync.set({"sad": [
+    var sadEmotis = [
         new Emoti("=(", "sad"),
         new Emoti("◉︵◉", "sad"),
         new Emoti("Q_Q", "sad"),
@@ -123,9 +158,9 @@ function initBaseEmoti() {
         new Emoti("ಠ╭╮ಠ", "sad"),
         new Emoti("(◕︿◕✿)", "sad"),
         new Emoti("ʕ ಡ ﹏ ಡ ʔ", "sad")
-    ]}, function() {});
+    ];
 
-    chrome.storage.sync.set({"angry": [
+    var angryEmotis = [
         new Emoti(">.<", "angry"),
         new Emoti("ಠ_ಠ", "angry"),
         new Emoti("ヽ(#`Д´)ﾉ", "angry"),
@@ -133,31 +168,55 @@ function initBaseEmoti() {
         new Emoti("＼(｀0´)／", "angry"),
         new Emoti("(ノಠ益ಠ)ノ", "angry"),
         new Emoti("ヽ(｀⌒´メ)ノ", "angry")
-    ]}, function() {});
+    ];
 
-    chrome.storage.sync.set({"confused": [
+    var confusedEmotis = [
         new Emoti("¯\\_(ツ)_/¯", "confused"),
         new Emoti("¯\\\\_(ツ)_/¯", "confused"),
         new Emoti("(・・。)ゞ", "confused"),
         new Emoti("(-_-)ゞ゛", "confused")
-    ]}, function() {});
+    ];
 
-    chrome.storage.sync.set({"tables": [
+    var tableEmotis = [
         new Emoti("(╯°□°）╯︵ ┻━┻", "tables"),
         new Emoti("┬─┬ ノ( ^_^ノ)", "tables"),
         new Emoti("┻━┻ ︵ヽ(`□´)ﾉ︵﻿ ┻━┻", "tables"),
         new Emoti(" (ノಠ益ಠ)ノ彡┻━┻", "tables")
-    ]}, function() {});
+    ];
 
-
-
-    chrome.storage.sync.set({"misc": [
+    var miscEmoti = [
         new Emoti(".....φ(・∀・＊)", "misc"),
         new Emoti("♪┏(・o･)┛♪┗ ( ･o･) ┓", "misc"),
         new Emoti("(☞ﾟヮﾟ)☞", "misc")
-    ]}, function() {});
+    ];
 
-    populateCategories();
+    initEmoti("happy", happyEmotis);
+    initEmoti("sad", sadEmotis);
+    initEmoti("angry", angryEmotis);
+    initEmoti("confused", confusedEmotis);
+    initEmoti("tables", tableEmotis);
+    chrome.storage.sync.get("misc", function(obj) {
+        var oldEmotis = obj.misc;
+        if (oldEmotis != undefined) {
+            miscEmoti.forEach(function(item) {
+                if (emotiIsUnique(item, oldEmotis)) {
+                    oldEmotis.push(item);
+                }
+            })
+            chrome.storage.sync.set({"misc": oldEmotis}, function() {
+                populateCategories();
+            });
+        }
+        else {
+            var newObj = {};
+            newObj["misc"] = miscEmoti;
+            chrome.storage.sync.set(newObj, function() {
+                populateCategories();
+            });
+        }
+    });
+
+
 }
 
 // Returns true if the Emoti is unique within its category
@@ -264,14 +323,14 @@ function deleteEmoti() {
 
 }
 
-function populateEmotisByCategory(categoryString) {
+function populateEmotisByCategory(categoryString, emotiArray) {
     var insertOnClick = false;
     chrome.storage.sync.get("settings", function(settingsObj) {
         if (settingsObj.settings.insert == 'true') {
             insertOnClick = true;
         }
-        chrome.storage.sync.get(categoryString, function(items){
-            items[categoryString].forEach(function(item, i){
+        if (emotiArray != undefined) {
+            emotiArray.forEach(function(item, i){
                 document.getElementById("cont" + categoryString).innerHTML +=
                     "<span id = 'h" + item.category + item.emoti + "' class = 'emotiHolder'><span id = 'i" + item.category + item.emoti + "' class = 'emoti'>" + item.emoti + "</span><img id = 'x" + item.category + item.emoti + "' class = 'deleteEmotiIcon' name = '" + item.emoti + "' alt = '" + categoryString + "' src = '/img/x.svg'><span>";
             });
@@ -280,16 +339,14 @@ function populateEmotisByCategory(categoryString) {
             var clickFunction = insertOnClick ? insertEmoti : copyEmoti;
             for (var i = 0; i < emotiElements.length; i++) {
                 emotiElements[i].addEventListener('click', clickFunction, false);
-                // emotiElements[i].addEventListener('contextmenu', displayEmotiContextMenu, false);
             }
 
             var deleteEmotiIcons = document.querySelectorAll('.deleteEmotiIcon');
             for (var n = 0; n < deleteEmotiIcons.length; n++) {
                 deleteEmotiIcons[n].addEventListener('click', deleteEmoti);
-                // emotiElements[i].addEventListener('contextmenu', displayEmotiContextMenu, false);
             }
+        }
 
-        });
     });
 }
 
@@ -341,7 +398,7 @@ function deleteCategory() {
         chrome.storage.sync.get("categories", function () {
             chrome.storage.sync.set({"categories": categories}, function () {
             });
-            chrome.storage.sync.remove("category", function () {
+            chrome.storage.sync.remove(category, function () {
                 document.getElementById('cont' + category).remove();
                 document.getElementById('cat' + category).remove();
                 document.getElementById('hr' + category).remove();
@@ -360,29 +417,56 @@ function deleteCategory() {
 
 // Gets the used categories and creates divs for each of them.
 function populateCategories() {
+    // document.getElementById("emotiCategoryContainer").innerHTML = "";
+    // chrome.storage.sync.get("categories", function(items) {
+    //     categories = items.categories;
+    //     // console.log(items.categories);
+    //     if (items.categories.length == 0) {
+    //         showBaseEmotiDiv();
+    //     }
+    //     else {
+    //         hideBaseEmotiDiv();
+    //     }
+    //     items.categories.forEach(function(item){
+    //         document.getElementById("emotiCategoryContainer").innerHTML +=
+    //             "<span id = 'cat" + item + "' class = 'emotiCategoryContainerTitle'>" + item + "<img id = '" + item + "' src = '/img/x.svg' class = 'deleteCategoryIcon'></span><br>" +
+    //             "<span id = warning-" + item + " class = 'categoryDeleteWarning'>Deleting this category will remove all contained emotis. Continue?</span>" +
+    //             "<div id = 'cont" + item + "' class = 'emotiContainer'></div>" +
+    //             "<hr id = 'hr" + item + "' class = 'borderHR'>";
+    //         populateEmotisByCategory(item);
+    //     });
+    //     var deleteCategoryIcons = document.querySelectorAll('.deleteCategoryIcon');
+    //     for (var i = 0; i < deleteCategoryIcons.length; i++) {
+    //         deleteCategoryIcons[i].addEventListener('click', deleteCategory, false);
+    //     }
+    //
+    // });
+    chrome.storage.sync.get(null, function(items) {
+        console.log(items);
+    });
+
     document.getElementById("emotiCategoryContainer").innerHTML = "";
-    chrome.storage.sync.get("categories", function(items) {
-        categories = items.categories;
-        if (categories.length == 0) {
-            showBaseEmotiDiv();
+    chrome.storage.sync.get(null, function(items) {
+        for (var category in items) {
+            if (items.hasOwnProperty(category)) {
+                if (category != "categories" && category != "settings") {
+                    categories.push(category);
+                        document.getElementById("emotiCategoryContainer").innerHTML +=
+                            "<span id = 'cat" + category + "' class = 'emotiCategoryContainerTitle'>" + category + "<img id = '" + category + "' src = '/img/x.svg' class = 'deleteCategoryIcon'></span><br>" +
+                            "<span id = warning-" + category + " class = 'categoryDeleteWarning'>Deleting this category will remove all contained emotis. Continue?</span>" +
+                            "<div id = 'cont" + category + "' class = 'emotiContainer'></div>" +
+                            "<hr id = 'hr" + category + "' class = 'borderHR'>";
+                        populateEmotisByCategory(category, items[category]);
+                }
+            }
         }
-        else {
-            hideBaseEmotiDiv();
-        }
-        items.categories.forEach(function(item){
-            document.getElementById("emotiCategoryContainer").innerHTML +=
-                "<span id = 'cat" + item + "' class = 'emotiCategoryContainerTitle'>" + item + "<img id = '" + item + "' src = '/img/x.svg' class = 'deleteCategoryIcon'></span><br>" +
-                "<span id = warning-" + item + " class = 'categoryDeleteWarning'>Deleting this category will remove all contained emotis. Continue?</span>" +
-                "<div id = 'cont" + item + "' class = 'emotiContainer'></div>" +
-                "<hr id = 'hr" + item + "' class = 'borderHR'>";
-            populateEmotisByCategory(item);
-        });
         var deleteCategoryIcons = document.querySelectorAll('.deleteCategoryIcon');
         for (var i = 0; i < deleteCategoryIcons.length; i++) {
             deleteCategoryIcons[i].addEventListener('click', deleteCategory, false);
         }
 
     });
+
 }
 //////
 
@@ -610,13 +694,13 @@ function addStaticUIEventListeners() {
     document.getElementById("saveSettingsButton").addEventListener("click", saveSettings);
     document.getElementById("initBaseEmotiButton").addEventListener("click", initBaseEmoti);
     document.getElementById("cancelInitBaseEmotiButton").addEventListener("click", hideBaseEmotiDiv);
+    // chrome.storage.onChanged.addListener(populateCategories());
 }
 
 ////Initialization functions
 // Initializes the program when popup.html is opened.
 function init() {
     initBaseVariables();
-
 }
 
 // Begins the program
