@@ -262,7 +262,7 @@ function saveNewEmoti() {
 
     }
 
-    var emoti = new Emoti(emotiText, emotiCategory);
+    var emoti = new Emoti(unescapeHTML(emotiText), emotiCategory);
     if (!checkEmotiLength(emoti.emoti)) {
         return false;
     }
@@ -349,7 +349,7 @@ function populateEmotisByCategory(categoryString, emotiArray) {
         if (emotiArray != undefined) {
             emotiArray.forEach(function(item, i){
                 document.getElementById("cont" + categoryString).innerHTML +=
-                    "<span id = 'h" + item.category + i + "' class = 'emotiHolder'><pre id = 'i" + item.category + i + "' class = 'emoti'>" + item.emoti + "</pre><img id = 'x" + item.category + i + "' class = 'deleteEmotiIcon' name = '" + item.category + i + "' alt = '" + categoryString + "' src = '/img/x.svg'><span>";
+                    "<span id = 'h" + item.category + i + "' class = 'emotiHolder'><span id = 'i" + item.category + i + "' class = 'emoti'>" + item.emoti + "</span><img id = 'x" + item.category + i + "' class = 'deleteEmotiIcon' name = '" + item.category + i + "' alt = '" + categoryString + "' src = '/img/x.svg'><span>";
             });
 
             var emotiElements = document.querySelectorAll('.emoti');
@@ -482,6 +482,7 @@ function removeFromArray(value, array) {
 
 // Returns a new array with the inputted emoti removed
 function removeEmotiFromArray(value, array) {
+    var value = unescapeHTML(value);
     var newArray = [];
     for (var i = 0; i < array.length; i++) {
         if (array[i].emoti != value) {
