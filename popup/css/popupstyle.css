@@ -104,6 +104,7 @@ body {
 
 #addEmotiCategoryText {
     display: none;
+    left: -10px;
 }
 
 .message {

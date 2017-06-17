@@ -205,6 +205,7 @@ function initBaseEmoti() {
             })
             chrome.storage.sync.set({"misc": oldEmotis}, function() {
                 populateCategories();
+                hideBaseEmotiDiv();
             });
         }
         else {
@@ -212,6 +213,7 @@ function initBaseEmoti() {
             newObj["misc"] = miscEmoti;
             chrome.storage.sync.set(newObj, function() {
                 populateCategories();
+                hideBaseEmotiDiv();
             });
         }
     });
@@ -316,8 +318,9 @@ function deleteEmoti() {
         var newObj = {};
         newObj[category] = newEmotis;
         chrome.storage.sync.set(newObj, function () {
-            document.getElementById('h' + category + emoti).remove();
-            displayStatusMessage(emoti + " removed", "emotiStatusMessage");
+            displayStatusMessage(document.getElementById('i' + emoti).innerHTML + " removed", "emotiStatusMessage");
+            document.getElementById('h' + emoti).remove();
+
         });
     });
 
@@ -332,7 +335,7 @@ function populateEmotisByCategory(categoryString, emotiArray) {
         if (emotiArray != undefined) {
             emotiArray.forEach(function(item, i){
                 document.getElementById("cont" + categoryString).innerHTML +=
-                    "<span id = 'h" + item.category + item.emoti + "' class = 'emotiHolder'><span id = 'i" + item.category + item.emoti + "' class = 'emoti'>" + item.emoti + "</span><img id = 'x" + item.category + item.emoti + "' class = 'deleteEmotiIcon' name = '" + item.emoti + "' alt = '" + categoryString + "' src = '/img/x.svg'><span>";
+                    "<span id = 'h" + item.category + i + "' class = 'emotiHolder'><span id = 'i" + item.category + i + "' class = 'emoti'>" + item.emoti + "</span><img id = 'x" + item.category + i + "' class = 'deleteEmotiIcon' name = '" + item.category + i + "' alt = '" + categoryString + "' src = '/img/x.svg'><span>";
             });
 
             var emotiElements = document.querySelectorAll('.emoti');
@@ -417,48 +420,27 @@ function deleteCategory() {
 
 // Gets the used categories and creates divs for each of them.
 function populateCategories() {
-    // document.getElementById("emotiCategoryContainer").innerHTML = "";
-    // chrome.storage.sync.get("categories", function(items) {
-    //     categories = items.categories;
-    //     // console.log(items.categories);
-    //     if (items.categories.length == 0) {
-    //         showBaseEmotiDiv();
-    //     }
-    //     else {
-    //         hideBaseEmotiDiv();
-    //     }
-    //     items.categories.forEach(function(item){
-    //         document.getElementById("emotiCategoryContainer").innerHTML +=
-    //             "<span id = 'cat" + item + "' class = 'emotiCategoryContainerTitle'>" + item + "<img id = '" + item + "' src = '/img/x.svg' class = 'deleteCategoryIcon'></span><br>" +
-    //             "<span id = warning-" + item + " class = 'categoryDeleteWarning'>Deleting this category will remove all contained emotis. Continue?</span>" +
-    //             "<div id = 'cont" + item + "' class = 'emotiContainer'></div>" +
-    //             "<hr id = 'hr" + item + "' class = 'borderHR'>";
-    //         populateEmotisByCategory(item);
-    //     });
-    //     var deleteCategoryIcons = document.querySelectorAll('.deleteCategoryIcon');
-    //     for (var i = 0; i < deleteCategoryIcons.length; i++) {
-    //         deleteCategoryIcons[i].addEventListener('click', deleteCategory, false);
-    //     }
-    //
-    // });
-    chrome.storage.sync.get(null, function(items) {
-        console.log(items);
-    });
-
+    var newCategories = [];
     document.getElementById("emotiCategoryContainer").innerHTML = "";
     chrome.storage.sync.get(null, function(items) {
+        var count = 0;
         for (var category in items) {
             if (items.hasOwnProperty(category)) {
                 if (category != "categories" && category != "settings") {
-                    categories.push(category);
+                    newCategories.push(category);
                         document.getElementById("emotiCategoryContainer").innerHTML +=
                             "<span id = 'cat" + category + "' class = 'emotiCategoryContainerTitle'>" + category + "<img id = '" + category + "' src = '/img/x.svg' class = 'deleteCategoryIcon'></span><br>" +
                             "<span id = warning-" + category + " class = 'categoryDeleteWarning'>Deleting this category will remove all contained emotis. Continue?</span>" +
                             "<div id = 'cont" + category + "' class = 'emotiContainer'></div>" +
                             "<hr id = 'hr" + category + "' class = 'borderHR'>";
                         populateEmotisByCategory(category, items[category]);
+                        count++;
                 }
             }
+        }
+        categories = newCategories;
+        if (count == 0) {
+            showBaseEmotiDiv();
         }
         var deleteCategoryIcons = document.querySelectorAll('.deleteCategoryIcon');
         for (var i = 0; i < deleteCategoryIcons.length; i++) {
