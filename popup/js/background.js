@@ -326,15 +326,15 @@ function isCategoryStringValid(category) {
 
 function deleteEmoti() {
     var category = this.alt;
-    var emoti = this.name;
+    var name = this.name;
+    var emoti = document.getElementById('i' + name).innerHTML;
     chrome.storage.sync.get(category, function (obj) {
         var newEmotis = removeEmotiFromArray(emoti, obj[category]);
         var newObj = {};
         newObj[category] = newEmotis;
         chrome.storage.sync.set(newObj, function () {
-            displayStatusMessage(document.getElementById('i' + emoti).innerHTML + " removed", "emotiStatusMessage");
-            document.getElementById('h' + emoti).remove();
-
+            displayStatusMessage(emoti + " removed", "emotiStatusMessage");
+            document.getElementById('h' + name).remove();
         });
     });
 
@@ -349,7 +349,7 @@ function populateEmotisByCategory(categoryString, emotiArray) {
         if (emotiArray != undefined) {
             emotiArray.forEach(function(item, i){
                 document.getElementById("cont" + categoryString).innerHTML +=
-                    "<span id = 'h" + item.category + i + "' class = 'emotiHolder'><span id = 'i" + item.category + i + "' class = 'emoti'>" + item.emoti + "</span><img id = 'x" + item.category + i + "' class = 'deleteEmotiIcon' name = '" + item.category + i + "' alt = '" + categoryString + "' src = '/img/x.svg'><span>";
+                    "<span id = 'h" + item.category + i + "' class = 'emotiHolder'><pre id = 'i" + item.category + i + "' class = 'emoti'>" + item.emoti + "</pre><img id = 'x" + item.category + i + "' class = 'deleteEmotiIcon' name = '" + item.category + i + "' alt = '" + categoryString + "' src = '/img/x.svg'><span>";
             });
 
             var emotiElements = document.querySelectorAll('.emoti');
