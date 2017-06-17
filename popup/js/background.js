@@ -267,22 +267,24 @@ function saveNewEmoti() {
         return false;
     }
     if (newCategory == true) {
-
-        chrome.storage.sync.get("categories", function(items){
-            var newCategoryText = document.getElementById("addEmotiCategoryText").value;
-            var newCategories = items.categories;
-            newCategories.push(newCategoryText);
-            chrome.storage.sync.set({"categories": newCategories}, function() {
-                var newEmotiObject = {};
-                emoti.category = newCategoryText;
-                newEmotiObject[newCategoryText] = [emoti];
-                chrome.storage.sync.set(newEmotiObject, function() {
-                    displayStatusMessage("Saved emoti: " + emoti.emoti, "emotiStatusMessage");
-                    hideAddEmotiForm();
-                    populateCategories();
+        if (isCategoryStringValid(document.getElementById("addEmotiCategoryText").value)) {
+            chrome.storage.sync.get("categories", function(items){
+                var newCategoryText = document.getElementById("addEmotiCategoryText").value;
+                var newCategories = items.categories;
+                newCategories.push(newCategoryText);
+                chrome.storage.sync.set({"categories": newCategories}, function() {
+                    var newEmotiObject = {};
+                    emoti.category = newCategoryText;
+                    newEmotiObject[newCategoryText] = [emoti];
+                    chrome.storage.sync.set(newEmotiObject, function() {
+                        displayStatusMessage("Saved emoti: " + emoti.emoti, "emotiStatusMessage");
+                        hideAddEmotiForm();
+                        populateCategories();
+                    });
                 });
             });
-        });
+        }
+
 
 
     }
@@ -309,6 +311,18 @@ function saveNewEmoti() {
 
     }
 }
+
+function isCategoryStringValid(category) {
+    var illegalChars = "><'\"";
+    for (var i = 0; i < illegalChars.length; i++) {
+        if (category.indexOf(illegalChars[i]) > -1) {
+            displayAddErrorMessage(illegalChars[i] + " is not allowed in category names.")
+            return false;
+        }
+    }
+    return true;
+}
+
 
 function deleteEmoti() {
     var category = this.alt;

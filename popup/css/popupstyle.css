@@ -73,7 +73,7 @@ body {
 }
 
 .addEmotiTextInput {
-    margin: auto;
+    /*margin: auto;*/
     position: relative;
     margin-bottom: 5px;
     width: 200px;
@@ -104,7 +104,7 @@ body {
 
 #addEmotiCategoryText {
     display: none;
-    left: -10px;
+    /*left: -10px;*/
 }
 
 .message {
