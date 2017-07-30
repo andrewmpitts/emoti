@@ -675,6 +675,30 @@ function hideSettingsMenu() {
 
 //////
 
+function exportEmotiJSON() {
+    chrome.storage.sync.get(null, function(storage) {
+        // Settings files need to be removed from export JSON.
+        var storageJSON = JSON.stringify(storage);
+        var date = new Date();
+        var dateString = date.getMonth() + 1 + "-" + date.getDate() + "-" + date.getFullYear();
+        var filestring = "emoti-" + dateString + ".json";
+        chrome.downloads.download({url: 'data:attachment/text,' + encodeURI(storageJSON), saveAs: true, filename: filestring}, function(downloadId) {
+            if (downloadId == undefined) {
+                displayStatusMessage("Download error.", "emotiStatusMessage");
+            }
+        });
+    });
+}
+
+function importEmotiJSON() {
+
+}
+
+function mergeEmotiJSON() {
+
+}
+
+// exportEmotiJSON();
 
 // Initialization functions
 ////
@@ -691,6 +715,7 @@ function addStaticUIEventListeners() {
     document.getElementById("saveSettingsButton").addEventListener("click", saveSettings);
     document.getElementById("initBaseEmotiButton").addEventListener("click", initBaseEmoti);
     document.getElementById("cancelInitBaseEmotiButton").addEventListener("click", hideBaseEmotiDiv);
+    document.getElementById("exportEmotiButton").addEventListener("click", exportEmotiJSON);
     // chrome.storage.onChanged.addListener(populateCategories());
 }
 

@@ -25,7 +25,8 @@
     "storage",
     "activeTab",
     "clipboardWrite",
-    "clipboardRead"
+    "clipboardRead",
+    "downloads"
   ]
 
 }
